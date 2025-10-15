@@ -1,0 +1,10 @@
+---
+- name: Configure Docker, Kubectl, and Jenkins on Worker Node
+  hosts: servers
+  become: yes
+
+  roles:
+    - docker
+    - kubectl
+    - jenkins
+

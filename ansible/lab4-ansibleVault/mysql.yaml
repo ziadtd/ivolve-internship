@@ -1,0 +1,51 @@
+---
+- name: Install and configure MySQL with Vault-protected credentials
+  hosts: mysql_server
+  become: yes
+  vars_files:
+    - group_vars/all.yml
+
+  tasks:
+    - name: Ensure MySQL server is installed
+      ansible.builtin.package:
+        name: mysql-server
+        state: present
+
+    - name: Start and enable MySQL service
+      ansible.builtin.service:
+        name: mysqld
+        state: started
+        enabled: true
+
+    - name: Ensure MySQL Python client is installed
+      ansible.builtin.package:
+        name: python3-PyMySQL
+        state: present
+
+    - name: Create iVolve database
+      community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        login_user: root
+        login_password: ""
+        login_unix_socket: /var/lib/mysql/mysql.sock
+
+    - name: Create user with privileges on iVolve DB
+      community.mysql.mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: "{{ db_name }}.*:ALL"
+        state: present
+        login_user: root
+        login_password: ""
+        login_unix_socket: /var/lib/mysql/mysql.sock
+
+    - name: Validate by listing databases
+      ansible.builtin.shell: |
+        mysql -u {{ db_user }} -p{{ db_password }} -e "SHOW DATABASES;"
+      register: db_output
+      changed_when: false
+
+    - name: Show DB validation output
+      ansible.builtin.debug:
+        var: db_output.stdout_lines

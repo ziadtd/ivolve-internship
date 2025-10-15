@@ -1,0 +1,62 @@
+---
+- name: Configure Nginx Web Server
+  hosts: webservers
+  become: yes
+  
+  tasks:
+    - name: Install EPEL repository for RHEL 9
+      dnf:
+        name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+        state: present
+        disable_gpg_check: yes
+      ignore_errors: yes
+    
+    - name: Install Nginx
+      dnf:
+        name: nginx
+        state: present
+    
+    - name: Start and enable Nginx service
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+    
+    - name: Configure firewall to allow HTTP traffic
+      command: firewall-cmd --permanent --add-service=http
+      ignore_errors: yes
+    
+    - name: Configure firewall to allow HTTPS traffic
+      command: firewall-cmd --permanent --add-service=https
+      ignore_errors: yes
+    
+    - name: Reload firewall
+      command: firewall-cmd --reload
+      ignore_errors: yes
+    
+    - name: Backup original index.html
+      copy:
+        src: /usr/share/nginx/html/index.html
+        dest: /usr/share/nginx/html/index.html.backup
+        remote_src: yes
+      ignore_errors: yes
+    
+    - name: Deploy custom web page
+      copy:
+        src: files/index.html
+        dest: /usr/share/nginx/html/index.html
+        owner: nginx
+        group: nginx
+        mode: '0644'
+      notify: Restart Nginx
+    
+    - name: Ensure Nginx is running
+      systemd:
+        name: nginx
+        state: started
+  
+  handlers:
+    - name: Restart Nginx
+      systemd:
+        name: nginx
+        state: restarted
