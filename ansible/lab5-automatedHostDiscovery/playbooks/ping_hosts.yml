@@ -1,0 +1,16 @@
+---
+- name: Ping all discovered EC2 instances
+  hosts: all
+  gather_facts: no
+  
+  tasks:
+    - name: Ping all hosts to verify connectivity
+      ping:
+      register: ping_result
+      
+    - name: Display ping results
+      debug:
+        msg: |
+          Host: {{ inventory_hostname }}
+          Status: {{ ping_result.ping }}
+          Response Time: SUCCESS

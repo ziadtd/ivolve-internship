@@ -1,0 +1,60 @@
+2025-10-20 16:32:30,194 p=2856 u=ziad n=ansible | [WARNING]: Collection amazon.aws does not support Ansible version 2.14.18
+
+2025-10-20 16:32:30,373 p=2856 u=ziad n=botocore.credentials | Found credentials in shared credentials file: ~/.aws/credentials
+2025-10-20 16:32:31,895 p=2856 u=ziad n=ansible | PLAY [Ping all discovered EC2 instances] *********************************************************************************************************************
+2025-10-20 16:32:31,919 p=2856 u=ziad n=ansible | TASK [Ping all hosts to verify connectivity] *****************************************************************************************************************
+2025-10-20 16:32:34,887 p=2856 u=ziad n=ansible | fatal: [ec2-54-196-228-159.compute-1.amazonaws.com]: UNREACHABLE! => {"changed": false, "msg": "Data could not be sent to remote host \"ec2-54-196-228-159.compute-1.amazonaws.com\". Make sure this host can be reached over ssh: ziad@ec2-54-196-228-159.compute-1.amazonaws.com: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).\r\n", "unreachable": true}
+2025-10-20 16:32:34,891 p=2856 u=ziad n=ansible | 	to retry, use: --limit @/home/ziad/ivolve-internship/ansible/lab5-automatedHostDiscovery/logs/ping_hosts.retry
+
+2025-10-20 16:32:34,891 p=2856 u=ziad n=ansible | PLAY RECAP ***************************************************************************************************************************************************
+2025-10-20 16:32:34,892 p=2856 u=ziad n=ansible | ec2-54-196-228-159.compute-1.amazonaws.com : ok=0    changed=0    unreachable=1    failed=0    skipped=0    rescued=0    ignored=0   
+2025-10-20 16:55:47,958 p=3941 u=ziad n=ansible | [WARNING]: Collection amazon.aws does not support Ansible version 2.14.18
+
+2025-10-20 16:55:48,040 p=3941 u=ziad n=botocore.credentials | Found credentials in shared credentials file: ~/.aws/credentials
+2025-10-20 16:55:51,330 p=3941 u=ziad n=ansible | PLAY [Ping all discovered EC2 instances] *********************************************************************************************************************
+2025-10-20 16:55:51,342 p=3941 u=ziad n=ansible | TASK [Ping all hosts to verify connectivity] *****************************************************************************************************************
+2025-10-20 16:55:54,013 p=3941 u=ziad n=ansible | fatal: [ec2-54-196-228-159.compute-1.amazonaws.com]: UNREACHABLE! => {"changed": false, "msg": "Data could not be sent to remote host \"ec2-54-196-228-159.compute-1.amazonaws.com\". Make sure this host can be reached over ssh: ziad@ec2-54-196-228-159.compute-1.amazonaws.com: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).\r\n", "unreachable": true}
+2025-10-20 16:55:54,017 p=3941 u=ziad n=ansible | 	to retry, use: --limit @/home/ziad/ivolve-internship/ansible/lab5-automatedHostDiscovery/logs/ping_hosts.retry
+
+2025-10-20 16:55:54,017 p=3941 u=ziad n=ansible | PLAY RECAP ***************************************************************************************************************************************************
+2025-10-20 16:55:54,017 p=3941 u=ziad n=ansible | ec2-54-196-228-159.compute-1.amazonaws.com : ok=0    changed=0    unreachable=1    failed=0    skipped=0    rescued=0    ignored=0   
+2025-10-20 16:56:40,257 p=3951 u=ziad n=ansible | [WARNING]: Collection amazon.aws does not support Ansible version 2.14.18
+
+2025-10-20 16:56:40,342 p=3951 u=ziad n=botocore.credentials | Found credentials in shared credentials file: ~/.aws/credentials
+2025-10-20 16:56:41,575 p=3951 u=ziad n=ansible | PLAY [Ping all discovered EC2 instances] *********************************************************************************************************************
+2025-10-20 16:56:41,586 p=3951 u=ziad n=ansible | TASK [Ping all hosts to verify connectivity] *****************************************************************************************************************
+2025-10-20 16:56:44,232 p=3951 u=ziad n=ansible | fatal: [ec2-54-196-228-159.compute-1.amazonaws.com]: UNREACHABLE! => {"changed": false, "msg": "Data could not be sent to remote host \"ec2-54-196-228-159.compute-1.amazonaws.com\". Make sure this host can be reached over ssh: ziad@ec2-54-196-228-159.compute-1.amazonaws.com: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).\r\n", "unreachable": true}
+2025-10-20 16:56:44,234 p=3951 u=ziad n=ansible | 	to retry, use: --limit @/home/ziad/ivolve-internship/ansible/lab5-automatedHostDiscovery/logs/ping_hosts.retry
+
+2025-10-20 16:56:44,234 p=3951 u=ziad n=ansible | PLAY RECAP ***************************************************************************************************************************************************
+2025-10-20 16:56:44,235 p=3951 u=ziad n=ansible | ec2-54-196-228-159.compute-1.amazonaws.com : ok=0    changed=0    unreachable=1    failed=0    skipped=0    rescued=0    ignored=0   
+2025-10-20 17:01:11,946 p=4000 u=ziad n=ansible | [WARNING]: Collection amazon.aws does not support Ansible version 2.14.18
+
+2025-10-20 17:01:12,025 p=4000 u=ziad n=botocore.credentials | Found credentials in shared credentials file: ~/.aws/credentials
+2025-10-20 17:01:13,341 p=4000 u=ziad n=ansible | PLAY [Ping all discovered EC2 instances] *********************************************************************************************************************
+2025-10-20 17:01:13,352 p=4000 u=ziad n=ansible | TASK [Ping all hosts to verify connectivity] *****************************************************************************************************************
+2025-10-20 17:01:15,675 p=4000 u=ziad n=ansible | fatal: [ec2-54-196-228-159.compute-1.amazonaws.com]: UNREACHABLE! => {"changed": false, "msg": "Data could not be sent to remote host \"ec2-54-196-228-159.compute-1.amazonaws.com\". Make sure this host can be reached over ssh: no such identity: /home/ziad/.ssh/ziad-key.pem: No such file or directory\r\nec2-user@ec2-54-196-228-159.compute-1.amazonaws.com: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).\r\n", "unreachable": true}
+2025-10-20 17:01:15,677 p=4000 u=ziad n=ansible | 	to retry, use: --limit @/home/ziad/ivolve-internship/ansible/lab5-automatedHostDiscovery/logs/ping_hosts.retry
+
+2025-10-20 17:01:15,677 p=4000 u=ziad n=ansible | PLAY RECAP ***************************************************************************************************************************************************
+2025-10-20 17:01:15,678 p=4000 u=ziad n=ansible | ec2-54-196-228-159.compute-1.amazonaws.com : ok=0    changed=0    unreachable=1    failed=0    skipped=0    rescued=0    ignored=0   
+2025-10-20 17:01:22,417 p=4009 u=ziad n=ansible | [WARNING]: Collection amazon.aws does not support Ansible version 2.14.18
+
+2025-10-20 17:01:22,498 p=4009 u=ziad n=botocore.credentials | Found credentials in shared credentials file: ~/.aws/credentials
+2025-10-20 17:01:25,993 p=4009 u=ziad n=ansible | ec2-54-196-228-159.compute-1.amazonaws.com | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Data could not be sent to remote host \"ec2-54-196-228-159.compute-1.amazonaws.com\". Make sure this host can be reached over ssh: no such identity: /home/ziad/.ssh/ziad-key.pem: No such file or directory\r\nec2-user@ec2-54-196-228-159.compute-1.amazonaws.com: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).\r\n",
+    "unreachable": true
+}
+2025-10-20 17:01:53,448 p=4020 u=ziad n=ansible | [WARNING]: Collection amazon.aws does not support Ansible version 2.14.18
+
+2025-10-20 17:01:53,529 p=4020 u=ziad n=botocore.credentials | Found credentials in shared credentials file: ~/.aws/credentials
+2025-10-20 17:01:54,761 p=4020 u=ziad n=ansible | PLAY [Ping all discovered EC2 instances] *********************************************************************************************************************
+2025-10-20 17:01:54,775 p=4020 u=ziad n=ansible | TASK [Ping all hosts to verify connectivity] *****************************************************************************************************************
+2025-10-20 17:01:58,849 p=4020 u=ziad n=ansible | ok: [ec2-54-196-228-159.compute-1.amazonaws.com]
+2025-10-20 17:01:58,856 p=4020 u=ziad n=ansible | TASK [Display ping results] **********************************************************************************************************************************
+2025-10-20 17:01:58,871 p=4020 u=ziad n=ansible | ok: [ec2-54-196-228-159.compute-1.amazonaws.com] => {
+    "msg": "Host: ec2-54-196-228-159.compute-1.amazonaws.com\nStatus: pong\nResponse Time: SUCCESS\n"
+}
+2025-10-20 17:01:58,883 p=4020 u=ziad n=ansible | PLAY RECAP ***************************************************************************************************************************************************
+2025-10-20 17:01:58,884 p=4020 u=ziad n=ansible | ec2-54-196-228-159.compute-1.amazonaws.com : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
