@@ -7,10 +7,10 @@ Each folder focuses on a specific technology such as **Ansible**, **Docker**, or
 
 ## Repository Structure
 
-- **[Ansible Labs](ansible-labs/README.md)** – Configuration management and automation using Ansible.
-- **[Build Tools Labs](build-tools-labs/README.md)** – Build tools and concepts.
-- **[Docker Labs](docker-labs/README.md)** – Containerization concepts and Docker usage.
-- **[Kubernetes Labs](kubernetes-labs/README.md)** – Orchestration and deployment management using Kubernetes.  
+- Ansible Labs– Configuration management and automation using Ansible.
+- Build Tools Labs– Build tools and concepts.
+- Docker Labs – Containerization concepts and Docker usage.
+- Kubernetes Labs – Orchestration and deployment management using Kubernetes.  
 
 ## Requirements
 
