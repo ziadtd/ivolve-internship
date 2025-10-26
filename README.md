@@ -1,5 +1,5 @@
 # ivolve-internship
-A Repository for Tasks and Projects completed in the iVolve internship as a part of the NTI-HireREady initivative for the Cloud DevOps Track Jul-Nov 2025
+A Repository for Tasks and Projects completed in the iVolve internship as a part of the NTI-HireReady initivative for the Cloud DevOps Track Jul-Nov 2025
 # DevOps Labs Repository
 
 This repository contains a collection of hands-on labs covering various DevOps tools and practices.  
