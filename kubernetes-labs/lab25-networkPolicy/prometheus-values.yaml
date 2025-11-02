@@ -1,0 +1,11 @@
+serviceAccounts:
+  server:
+    create: true
+
+server:
+  extraScrapeConfigs:
+    - job_name: 'node-exporter'
+      static_configs:
+        - targets:
+            - 'node-exporter.monitoring.svc.cluster.local:9100'
+
