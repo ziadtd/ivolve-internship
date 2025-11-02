@@ -1,0 +1,66 @@
+Name:             nodejs-app-5f758c4b99-mwqqh
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             worker/192.168.52.134
+Start Time:       Sun, 02 Nov 2025 20:35:35 +0200
+Labels:           app=nodejs-app
+                  pod-template-hash=5f758c4b99
+Annotations:      <none>
+Status:           Running
+IP:               10.40.0.5
+IPs:
+  IP:           10.40.0.5
+Controlled By:  ReplicaSet/nodejs-app-5f758c4b99
+Containers:
+  nodejs-container:
+    Container ID:   containerd://76dcbb6133382075e1b94550832a7efcabf0d30f02f2a02a9a6ca8ab3431e62c
+    Image:          ziadtd/nodejs-mysql-app:latest
+    Image ID:       docker.io/ziadtd/nodejs-mysql-app@sha256:48f4c7c6ad56c7e42ab6c3eb0cc991296256f0fc74fac054fee28f800a56eb73
+    Port:           3000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Sun, 02 Nov 2025 20:35:38 +0200
+    Ready:          True
+    Restart Count:  0
+    Liveness:       http-get http://:3000/health delay=15s timeout=5s period=10s #success=1 #failure=3
+    Readiness:      http-get http://:3000/ready delay=10s timeout=3s period=5s #success=1 #failure=3
+    Environment:
+      DB_HOST:      mysql-service
+      DB_USER:      appuser
+      DB_PASSWORD:  apppassword
+      DB_NAME:      ivolve
+    Mounts:
+      /app/logs from logs (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-qzddc (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  logs:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  kube-api-access-qzddc:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+                             workload=worker:NoSchedule
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  79s   default-scheduler  Successfully assigned default/nodejs-app-5f758c4b99-mwqqh to worker
+  Normal  Pulling    79s   kubelet            Pulling image "ziadtd/nodejs-mysql-app:latest"
+  Normal  Pulled     77s   kubelet            Successfully pulled image "ziadtd/nodejs-mysql-app:latest" in 1.462s (1.462s including waiting). Image size: 48849616 bytes.
+  Normal  Created    77s   kubelet            Created container: nodejs-container
+  Normal  Started    77s   kubelet            Started container nodejs-container
