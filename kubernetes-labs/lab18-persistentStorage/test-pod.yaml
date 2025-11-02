@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: log-test-pod
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command: ["/bin/sh", "-c", "echo 'Test log' > /logs/test.log && cat /logs/test.log && sleep 3600"]
+      volumeMounts:
+        - mountPath: /logs
+          name: app-logs
+  volumes:
+    - name: app-logs
+      persistentVolumeClaim:
+        claimName: app-logs-pvc
