@@ -134,7 +134,7 @@ spec:
         }
         success {
             echo ' LAB 30 PASSED – YOUR JAVA APP IS LIVE!'
-            echo "Open: http://<NODE-IP>:30080"
+            echo "Open: http://192.168.52.134:30080"
         }
         failure {
             echo 'Pipeline failed – check logs above!'
