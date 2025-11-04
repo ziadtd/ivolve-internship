@@ -28,7 +28,7 @@ This lab demonstrates the implementation of Role-Based Access Control (RBAC) in 
 1. Go to **Manage Jenkins** → **Manage Plugins**
 2. Click **Installed plugins** tab
 3. Search for "Role-based" to confirm installation
-(http://./1.png?raw=true)
+![image](http://./1.png?raw=true)
 
 ### Step 3: Enable Role-Based Authorization Strategy
 
@@ -61,7 +61,7 @@ You should now see both users in the user list:
 - user1
 - user2
 - admin (your original admin user)
-(http://./2.png?raw=true)
+![image](http://./2.png?raw=true)
 
 ### Step 5: Configure Role-Based Authorization
 
@@ -96,7 +96,7 @@ You should now see both users in the user list:
 4. Leave all other permissions unchecked
 5. Scroll down and click **Save**
 
-(http://./3.png?raw=true)
+![image](http://./3.png?raw=true)
 
 ### Step 7: Assign Roles to Users
 
@@ -117,7 +117,7 @@ You should now see both users in the user list:
 8. In the table, find user2 and check the **readonly** box
 9. Click **Save**
 
-(http://./4.png?raw=true)
+![image](http://./4.png?raw=true)
 
 ### Step 8: Test User Permissions
 
