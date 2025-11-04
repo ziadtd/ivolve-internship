@@ -1,3 +1,67 @@
+### Lab 30: Jenkins Pipeline for Application Deployment
+
+#### Step 1: Clone the Repository Locally
+
+ ```bash
+ git clone https://github.com/Ibrahim-Adel15/Jenkins_App.git
+ ```
+
+
+
+#### Step 3: Set Up Jenkins Environment
+- **Install Plugins** (if not already):
+  - Go to Jenkins Dashboard > Manage Jenkins > Manage Plugins.
+  - Install: Pipeline and Docker Pipeline
+
+- **Add Credentials**:
+  - Manage Jenkins > Manage Credentials.
+  - Add Docker Hub: ID = `docker-hub-credentials`, type = Username with password (your Docker Hub username/password).
+  - Add Kubeconfig: ID = `kube-config`, type = Secret file (upload `~/.kube/config` from K8s cluster).
+  
+
+#### Step 4: Create the deployment.yaml File
+ Create file  `deployment.yaml`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: ziadtd/frontend:v2  
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 30007  # Or any free port
+  selector:
+    app: myapp
+```
+
+
+#### Step 5: Create the Jenkinsfile
+Create `Jenkinsfile`
+
+```groovy
 pipeline {
     agent any
     environment {
@@ -17,7 +81,6 @@ pipeline {
             }
         }
 
-
         stage('Run Unit Tests (Maven)') {
             steps {
                 echo 'Running Maven tests (safe mode)...'
@@ -34,7 +97,6 @@ pipeline {
                 }
             }
         }
-
         stage('Build App (Maven)') {
             steps {
                 echo 'Packaging JAR...'
@@ -134,10 +196,19 @@ spec:
         }
         success {
             echo ' LAB 30 PASSED – YOUR JAVA APP IS LIVE!'
-            echo "Open: http://<NODE-IP>:30080"
+            echo "Open: http://192.168.52.134:30080"
         }
         failure {
             echo 'Pipeline failed – check logs above!'
         }
     }
 }
+```
+
+
+#### Step 6: Verify
+```bash
+kubectl get pods
+curl http://192.168.52.134:30080
+```
+
