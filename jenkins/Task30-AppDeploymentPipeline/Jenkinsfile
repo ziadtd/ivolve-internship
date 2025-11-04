@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CRED = 'docker-hub-credentials'  
+        IMAGE_NAME = 'ziadtd/frontend:v2'  
+        KUBE_CONFIG = 'kube-config'  
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git url: 'https://github.com/Ibrahim-Adel15/Jenkins_App.git', branch: 'main'
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                sh '''
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install flask pytest
+                cd app
+                pytest tests/test_app.py -v
+                '''
+            }
+        }
+
+        stage('Build App') {
+            steps {
+                echo 'Building the application... (For Python, this is mostly setup)'
+                sh 'cd app && python app.py --build-check' 
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t ${IMAGE_NAME} ."
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: DOCKERHUB_CRED, passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
+                    sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                    '''
+                }
+            }
+        }
+
+        stage('Delete Image Locally') {
+            steps {
+                sh "docker rmi ${IMAGE_NAME} || true"
+            }
+        }
+
+        stage('Edit new image in deployment.yaml') {
+            steps {
+                sh "sed -i 's|image: .*|image: ${IMAGE_NAME}|g' deployment.yaml"
+            }
+        }
+
+        stage('Deploy to k8s cluster') {
+            steps {
+                withCredentials([file(credentialsId: KUBE_CONFIG, variable: 'KUBECONFIG')]) {
+                    sh 'kubectl --kubeconfig=$KUBECONFIG apply -f deployment.yaml'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up workspace'
+            deleteDir()  // Or cleanWs()
+        }
+        success {
+            echo 'Pipeline succeeded! App deployed.'
+        }
+        failure {
+            echo 'Pipeline failed! Check logs.'
+        }
+    }
+}
