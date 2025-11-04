@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  namespace: monitoring
+  labels:
+    app: node-exporter
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      # Tolerate all taints so it runs on every node
+      tolerations:
+        - operator: "Exists"
+      hostNetwork: true
+      hostPID: true
+      hostIPC: true
+      containers:
+        - name: node-exporter
+          image: prom/node-exporter:v1.8.1
+          ports:
+            - containerPort: 9100
+              name: metrics
+          command:
+            - /bin/node_exporter
+            - --path.procfs=/host/proc
+            - --path.sysfs=/host/sys
+            - --collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($|/)"
+            - --path.rootfs=/rootfs
+          volumeMounts:
+            - name: proc
+              mountPath: /host/proc
+              readOnly: true
+            - name: sys
+              mountPath: /host/sys
+              readOnly: true
+            - name: root
+              mountPath: /rootfs
+              readOnly: true
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: root
+          hostPath:
+            path: /
+
