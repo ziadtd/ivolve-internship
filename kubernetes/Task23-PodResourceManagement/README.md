@@ -1,8 +1,10 @@
 # Lab 23: Pod Resource Management with CPU and Memory Requests and Limits  
 
+---
+
 ## Overview
 
-This lab **adds CPU and memory resource constraints** to the **real Node.js application** (`ziadtd/nodejs-mysql-app:latest`) to ensure:
+This lab **adds CPU and memory resource constraints** to the **Node.js application** (`ziadtd/nodejs-mysql-app:latest`) to ensure:
 
 - **Guaranteed resources** → No starvation
 - **Hard limits** → Prevent runaway pods
@@ -13,7 +15,7 @@ This lab **adds CPU and memory resource constraints** to the **real Node.js appl
 
 ## Updated Deployment with Resources
 
-create `deployment-resources.yaml`
+create `deployment-resources.yaml` file
 
 ```yaml
 apiVersion: apps/v1
@@ -56,11 +58,11 @@ spec:
               mountPath: /app/logs
           resources:
             requests:
-              memory: "256Mi"   
-              cpu: "250m"       
+              memory: "256Mi"
+              cpu: "250m"
             limits:
-              memory: "512Mi"  
-              cpu: "500m"      
+              memory: "512Mi"
+              cpu: "500m"
           readinessProbe:
             httpGet:
               path: /ready
@@ -82,7 +84,9 @@ spec:
           emptyDir: {}
 ```
 
-Apply the Deployment
+---
+
+## Apply the Deployment
 
 ```bash
 kubectl apply -f deployment-resources.yaml
@@ -92,7 +96,27 @@ kubectl apply -f deployment-resources.yaml
 
 ## Verification Steps
 
+Verify Resources Applied
+
 ```bash
 POD_NAME=$(kubectl get pod -l app=nodejs-app -o jsonpath="{.items[0].metadata.name}")
 kubectl describe pod $POD_NAME | grep -A 10 "Requests\|Limits"
+```
+
+**Expected Output**:
+```yaml
+Limits:
+  cpu:        500m
+  memory:     512Mi
+Requests:
+  cpu:        250m
+  memory:     256Mi
+```
+
+---
+
+### 2. **Monitor Real-Time Usage**
+
+```bash
+kubectl top pod -l app=nodejs-app
 ```
