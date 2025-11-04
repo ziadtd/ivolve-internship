@@ -1,7 +1,5 @@
 # Lab 23: Pod Resource Management with CPU and Memory Requests and Limits  
-
----
-
+p
 ## Overview
 
 This lab **adds CPU and memory resource constraints** to the **Node.js application** (`ziadtd/nodejs-mysql-app:latest`) to ensure:
@@ -119,4 +117,8 @@ Requests:
 
 ```bash
 kubectl top pod -l app=nodejs-app
+<<<<<<< HEAD
 ```
+=======
+```
+>>>>>>> 5e97773b49e833819ab804b63ed596f5f9ca2d10
