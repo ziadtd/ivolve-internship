@@ -1,0 +1,115 @@
+@Library('lab31-shared-library') _
+
+pipeline {
+    agent {
+        label 'docker-agent'
+    }
+    
+    environment {
+        // Docker Configuration
+        DOCKER_REGISTRY = 'docker.io'
+        DOCKER_IMAGE_NAME = 'ziadtd/jenkins-app'
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
+        
+        // Kubernetes Configuration
+        K8S_DEPLOYMENT_FILE = 'k8s/deployment.yaml'
+        K8S_TOKEN_CREDENTIAL_ID = 'k8s-token'
+        K8S_APISERVER_CREDENTIAL_ID = 'k8s-apiserver'
+        K8S_NAMESPACE = 'default'
+        
+        // Build Configuration
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
+        FULL_IMAGE_NAME = "${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"
+    }
+    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps()
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code...'
+                checkout scm
+            }
+        }
+        
+        stage('RunUnitTest') {
+            steps {
+                script {
+                    runUnitTest()
+                }
+            }
+        }
+        
+        stage('BuildApp') {
+            steps {
+                script {
+                    buildApp()
+                }
+            }
+        }
+        
+        stage('BuildImage') {
+            steps {
+                script {
+                    echo 'Building Docker Image...'
+                    buildImage()
+                }
+            }
+        }
+        
+        stage('ScanImage') {
+            steps {
+                script {
+                    scanImage()
+                }
+            }
+        }
+        
+        stage('PushImage') {
+            steps {
+                script {
+                    pushImage()
+                }
+            }
+        }
+        
+        stage('RemoveImageLocally') {
+            steps {
+                script {
+                    removeImageLocally()
+                }
+            }
+        }
+        
+        stage('DeployOnK8s') {
+            steps {
+                script {
+                    echo 'Deploying to Kubernetes...'
+                    deployOnK8s()
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+            echo "Application deployed with image: ${FULL_IMAGE_NAME}"
+        }
+        
+        failure {
+            echo 'Pipeline failed!'
+            echo 'Sending failure notification...'
+        }
+        
+        always {
+            echo 'Cleaning workspace...'
+            cleanWs()
+        }
+    }
+}
