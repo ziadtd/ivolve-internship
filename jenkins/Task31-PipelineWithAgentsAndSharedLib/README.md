@@ -94,14 +94,6 @@ Create the following files in the `vars/` directory
 
 5. Click **Save**
 
-### Part 3: Pipeline Implementation
-
-#### Step 1: Clone Application Repository
-
-```bash
-git clone https://github.com/Ibrahim-Adel15/Jenkins_App.git
-cd Jenkins_App
-```
 
 #### Step 2: Create Jenkinsfile
 
@@ -112,23 +104,12 @@ Create `Jenkinsfile`
 
 #### Step 3: Create Kubernetes Deployment File
 
-Create `k8s/deployment.yaml` (see artifact below).
+Create `k8s/deployment.yaml`
 
 #### Step 4: Configure Jenkins Credentials
 
 Add the following credentials in Jenkins:
 
-1. **Docker Hub Credentials**
-   - ID: `dockerhub-credentials`
-   - Type: Username with password
-
-2. **Kubernetes Token**
-   - ID: `k8s-token`
-   - Type: Secret text
-
-3. **Kubernetes API Server**
-   - ID: `k8s-apiserver`
-   - Type: Secret text
 
 #### Step 5: Create Jenkins Pipeline Job
 
@@ -142,47 +123,8 @@ Add the following credentials in Jenkins:
    - **Script Path**: `Jenkinsfile`
 5. Click **Save**
 
-## Pipeline Stages Explained
-
-### 1. RunUnitTest
-- Executes unit tests for the application
-- Validates code quality before build
-- Fails pipeline if tests don't pass
-
-### 2. BuildApp
-- Compiles application code
-- Creates executable artifacts
-- Packages application for containerization
-
-### 3. BuildImage
-- Builds Docker image from Dockerfile
-- Tags image with build number
-- Prepares image for scanning
-
-### 4. ScanImage
-- Scans Docker image with Trivy
-- Identifies vulnerabilities (CVEs)
-- Generates security report
-- Can fail build based on severity threshold
-
-### 5. PushImage
-- Authenticates with Docker registry
-- Pushes tagged image to Docker Hub
-- Makes image available for deployment
-
-### 6. RemoveImageLocally
-- Cleans up local Docker images
-- Frees disk space on agent
-- Maintains agent hygiene
-
-### 7. DeployOnK8s
-- Applies Kubernetes manifests
-- Updates deployment with new image
-- Verifies deployment success
-
 ### Running the Pipeline Manually
 
 1. Navigate to pipeline job
 2. Click **Build Now**
 3. Monitor execution in **Console Output**
-
