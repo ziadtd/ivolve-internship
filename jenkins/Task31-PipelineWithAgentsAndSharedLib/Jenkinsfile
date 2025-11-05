@@ -52,7 +52,19 @@ pipeline {
                 }
             }
         }
-        
+        stage('Who am I?') {
+            steps {
+                sh '''
+                    echo "=== USER INFO ==="
+                    whoami
+                    id
+                    echo "=== GROUPS ==="
+                    groups
+                    echo "=== DOCKER SOCKET ==="
+                    ls -l /var/run/docker.sock
+                '''
+            }
+        }
         stage('BuildImage') {
             steps {
                 script {
