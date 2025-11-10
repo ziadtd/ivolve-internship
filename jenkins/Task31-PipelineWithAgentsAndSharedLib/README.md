@@ -338,8 +338,8 @@ Add Docker Hub: ID = docker-hub-credentials, type = Username with password (your
 4. Configure:
    - **Pipeline Definition**: Pipeline script from SCM
    - **SCM**: Git
-   - **Repository URL**: `https://github.com/Ibrahim-Adel15/Jenkins_App.git`
-   - **Script Path**: `Jenkinsfile`
+   - **Repository URL**: `https://github.com/ziadtd/ivolve-internship`
+   - **Script Path**: `jenkins/Task31-PipelineWithAgentsAndSharedLibJenkinsfile`
 5. Click **Save**
 
 ### Running the Pipeline Manually
