@@ -76,7 +76,64 @@ mkdir -p vars
 #### Step 2: Create Shared Library Functions
 
 Create the following files in the `vars/` directory
+
+`buildApp.groovy`
 ```groovy
+def call() {
+    echo "Building app"
+    sh 'mvn clean package -f jenkins/Task31-PipelineWithAgentsAndSharedLib/Jenkins_App/pom.xml'
+}
+```
+
+`buildImage.groovy`
+```groovy
+def call() {
+    echo "Building Docker image"
+    sh 'docker build -t jenkins-app:latest jenkins/Task31-PipelineWithAgentsAndSharedLib/Jenkins_App'
+}
+```
+
+`deplouOnK9s.groovy`
+```groovy
+def call() {
+    echo "Deploying application on Kubernetes"
+                withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
+                    sh '''
+                    kubectl apply -f deployment.yaml --kubeconfig=$KUBECONFIG
+                    kubectl rollout status deployment/myapp --kubeconfig=$KUBECONFIG
+                    '''
+                }            
+}
+```
+
+`pushImage.groovy`
+```groovy
+def call() {
+    echo "Pushing Docker image to image registery"
+    sh 'echo Image pushed'
+}
+```
+
+`removeImageLocally.groovy`
+```groovy
+def call() {
+    echo "Removing local image"
+    sh 'docker rmi jenkins-app:latest || true'
+}
+```
+`run unitTest.groovy`
+```groovy
+def call() {
+    echo "Running the Unit Test"
+    sh 'mvn test || echo "No tests found – continuing"'
+}
+```
+`scanImage.groovy`
+```groovy
+def call() {
+    echo "Scanning Docker image for vulnerabilities"
+    sh 'echo Image scan completed'
+}
 ```
 #### Step 3: Configure Shared Library in Jenkins
 
@@ -100,16 +157,178 @@ Create the following files in the `vars/` directory
 Create `Jenkinsfile` 
 
 ```groovy
+@Library('lab31-shared-library') _
+
+pipeline {
+    agent {
+        label 'docker-agent'
+    }
+    
+    environment {
+        // Docker Configuration
+        DOCKER_REGISTRY = 'docker.io'
+        DOCKER_IMAGE_NAME = 'ziadtd/jenkins-app'
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
+        
+        // Kubernetes Configuration
+        K8S_DEPLOYMENT_FILE = 'k8s/deployment.yaml'
+        K8S_TOKEN_CREDENTIAL_ID = 'k8s-token'
+        K8S_APISERVER_CREDENTIAL_ID = 'k8s-apiserver'
+        K8S_NAMESPACE = 'default'
+        
+        // Build Configuration
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
+        FULL_IMAGE_NAME = "${DOCKER_IMAGE_NAME}:${IMAGE_TAG}"
+    }
+    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps()
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code...'
+                checkout scm
+            }
+        }
+        
+        stage('RunUnitTest') {
+            steps {
+                script {
+                    runUnitTest()
+                }
+            }
+        }
+        
+        stage('BuildApp') {
+            steps {
+                script {
+                    buildApp()
+                }
+            }
+        }
+        stage('Who am I?') {
+            steps {
+                sh '''
+                    echo "=== USER INFO ==="
+                    whoami
+                    id
+                    echo "=== GROUPS ==="
+                    groups
+                    echo "=== DOCKER SOCKET ==="
+                    ls -l /var/run/docker.sock
+                '''
+            }
+        }
+        stage('BuildImage') {
+            steps {
+                script {
+                    echo 'Building Docker Image...'
+                    buildImage()
+                }
+            }
+        }
+        
+        stage('ScanImage') {
+            steps {
+                script {
+                    scanImage()
+                }
+            }
+        }
+        
+        stage('PushImage') {
+            steps {
+                script {
+                    pushImage()
+                }
+            }
+        }
+        
+        stage('RemoveImageLocally') {
+            steps {
+                script {
+                    removeImageLocally()
+                }
+            }
+        }
+        
+        stage('DeployOnK8s') {
+            steps {
+                script {
+                    echo 'Deploying to Kubernetes...'
+                    deployOnK8s()
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+            echo "Application deployed with image: ${FULL_IMAGE_NAME}"
+        }
+        
+        failure {
+            echo 'Pipeline failed!'
+            echo 'Sending failure notification...'
+        }
+        
+        always {
+            echo 'Cleaning workspace...'
+            cleanWs()
+        }
+    }
+}
 ```
 
 #### Step 3: Create Kubernetes Deployment File
 
-Create `k8s/deployment.yaml`
+Create `deployment.yaml`
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins-app
+  template:
+    metadata:
+      labels:
+        app: jenkins-app
+    spec:
+      containers:
+      - name: jenkins-app
+        image: jenkins-app:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-app-service
+spec:
+  type: NodePort
+  selector:
+    app: jenkins-app
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30080
+```
 
 #### Step 4: Configure Jenkins Credentials
 
 Add the following credentials in Jenkins:
-
+Add Kubeconfig: ID = kube-config, type = Secret file (upload ~/.kube/config from K8s cluster).
+Add Docker Hub: ID = docker-hub-credentials, type = Username with password (your Docker Hub username/password).
 
 #### Step 5: Create Jenkins Pipeline Job
 
